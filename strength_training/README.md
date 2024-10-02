@@ -3,5 +3,9 @@ A weight training program that focuses on high-weight/low-reps with the goal of 
 
 
 # TODOs
-- [ ] Make class for a week
-- [ ] Make class for a cycle
+- [X] Make class for a week
+- [X] Make class for a cycle
+- [ ] Output weekly schedule to csv
+- [ ] Store weekly params
+- [ ] Check failures or updates
+- [ ] Get next week
