@@ -44,7 +44,7 @@ class InputReader:
         main = []
         support = []
         for _, row in day_df.iterrows():
-            tup = (row.exercise, row.training_max)
+            tup = (row.exercise, row.training_max, row.increment_per_cycle)
             if row['type'] == 'main':
                 main.append(tup)
             elif row['type'] == 'support':
