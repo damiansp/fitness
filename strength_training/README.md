@@ -1,5 +1,5 @@
 # Strength Training
-A weight training program that focuses on high-weight/low-reps with the goal of building strength efficiently. I was motivated to start doing this after reading Dr. Peter Attia's book _Outlive_, that suggests gaining strengh is one of the best things people can do to maintain good health into old age.
+A weight training program that focuses on high-weight/low-reps with the goal of building strength efficiently. I was motivated to start doing this after reading Dr. Peter Attia's book _Outlive_, that suggests gaining strength is one of the best things people can do to maintain good health into old age.
 
 
 # TODOs
@@ -7,6 +7,7 @@ A weight training program that focuses on high-weight/low-reps with the goal of 
 - [X] Make class for a cycle
 - [X] Read inputs form various formats
 - [X] Output weekly schedule to csv
+- [ ] Incorporate weight increments per cycle
 - [ ] Store weekly params
 - [ ] Check failures or updates
 - [ ] Get next week
