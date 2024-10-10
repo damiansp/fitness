@@ -2,20 +2,28 @@ import pandas as pd
 
 
 class Exercise:
-    def __init__(self, name:str, training_max: float, reps_percents):
+    def __init__(
+            self, name:str,
+            training_max: float,
+            reps_percents,
+            increment: float):
         self.name = name
         self.training_max = training_max
         self.reps_percents = reps_percents
+        self.increment = increment
 
     def make_row(self):
         row = pd.concat([self._make_week(w) for w in range(1, 5)], axis=1)
         row.index = [self.name] * len(row)
         row.replace(0, pd.NA, inplace=True)
+        row['Increment for Next Cycle'] = (
+            [self.increment] + (len(row) - 1)*[pd.NA])
         return row                        
 
     def _make_week(self, week):
         reps_percents = self.reps_percents[f'week{week}']
-        data = [[r, p * self.training_max] for (r, p) in reps_percents]
+        data = [
+            [r, round(p * self.training_max, 2)] for (r, p) in reps_percents]
         df = pd.DataFrame(
             data,
             columns=pd.MultiIndex.from_tuples(
@@ -25,7 +33,10 @@ class Exercise:
 
 class MainExercise(Exercise):
     def __init__(
-            self, name: str, training_max: float, is_extended: bool = False):
+            self, name: str,
+            training_max: float,
+            increment: float,
+            is_extended: bool = False):
         reps_percents = {
             # (reps, % of max)
             'week1': [
@@ -40,11 +51,11 @@ class MainExercise(Exercise):
                 (0, 0), (0, 0), (0, 0), (5, 0.4), (5, 0.5), (5, 0.6)]}
         if not is_extended:
             reps_percents = {k: v[3:] for k, v in reps_percents.items()}
-        super().__init__(name, training_max, reps_percents)
+        super().__init__(name, training_max, reps_percents, increment)
 
 
 class SupportingExercise(Exercise):
-    def __init__(self, name: str, training_max: float):
+    def __init__(self, name: str, training_max: float, increment: float):
         reps_percents = {
             # (reps, % of max)
             'week1': [('5x10', 0.85)],
@@ -52,7 +63,7 @@ class SupportingExercise(Exercise):
             'week3': [('5x10', 0.95)],
             # Deload week
             'week4': [('5x10', 0.6)]}
-        super().__init__(name, training_max, reps_percents)
+        super().__init__(name, training_max, reps_percents, increment)
 
 
 class ScheduleRow:
@@ -102,13 +113,11 @@ class Schedule:
         dfs = []
         for i, day in enumerate(self.exercises):
             main_exercises = [
-                MainExercise(name, tr_mx, self.is_extended)
-                for (name, tr_mx) in day['main']]
-            #main_exercise = MainExercise(
-            #    *day['main'], is_extended=self.is_extended)
+                MainExercise(name, tr_mx, incr, self.is_extended)
+                for (name, tr_mx, incr) in day['main']]
             supporting_exercises = [
-                SupportingExercise(name, tr_mx)
-                for (name, tr_mx) in day['support']]
+                SupportingExercise(name, tr_mx, incr)
+                for (name, tr_mx, incr) in day['support']]
             row = ScheduleRow(main_exercises, supporting_exercises).make_row()
             row.index = pd.MultiIndex.from_tuples(
                 [(i + 1, idx) for idx in row.index])
@@ -133,20 +142,26 @@ if __name__ == '__main__':
     #print(ScheduleRow(main_ex, support).make_row())
 
     exercises = [
-        {'main': [('Squat', 188.)],
+        {'main': [('Squat', 188., 10)],
          'support': [
-             ('GM Standing', 76.5), ('DB Lunge', 69.5), ('Situp', 17.1)]},
-        {'main': [('Bench', 139.)],
+             ('GM Standing', 76.5, 1.24),
+             ('DB Lunge', 69.5, 2.5),
+             ('Situp', 17.1, 1.25)]},
+        {'main': [('Bench', 139., 5)],
          'support': [
-             ('DB Flies', 69.5), ('Wide Dips', 14.54), ('Knuckle Duster', 24.)
+             ('DB Flies', 69.5, 2.5),
+             ('Wide Dips', 14.54, 1.25),
+             ('Knuckle Duster', 24, 1.25)
          ]},
-        {'main': [('Deadlift', 215.)],
+        {'main': [('Deadlift', 215., 10)],
          'support': [
-             ('DB Skull Crusher', 20.75),
-             ('Kroc Rows', 39.5),
-             ('Situps', 17.1)]},
-        {'main': [('Overhead Press', 106.5)],
-         'support': [('Pullup', 10.), ('Curl', 20.75), ('Knuckle Duster', 24.)]
-        }]
+             ('DB Skull Crusher', 20.75, 1.25),
+             ('Kroc Rows', 39.5, 2.5),
+             ('Situps', 17.1, 1.25)]},
+        {'main': [('Overhead Press', 106.5, 5)],
+         'support': [
+             ('Pullup', 10., 1.25),
+             ('Curl', 20.75, 1.25),
+             ('Knuckle Duster', 24., 1.25)]}]
     print(Schedule(exercises, is_extended=True).make_schedule())
     
