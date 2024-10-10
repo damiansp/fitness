@@ -25,6 +25,7 @@ day|type   |exercise   |training_max|increment_per_cycle
 2  |main   |bench      |150         |5
 2  |support|db flies   |80          |1.25
 2  |support|...        |...         |...
+...|...    |...        |...         |...
 
 - pickle: a pickled dictionary formatted as:
 ```{python}
