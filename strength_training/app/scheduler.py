@@ -10,6 +10,7 @@ class Exercise:
     def make_row(self):
         row = pd.concat([self._make_week(w) for w in range(1, 5)], axis=1)
         row.index = [self.name] * len(row)
+        row.replace(0, pd.NA, inplace=True)
         return row                        
 
     def _make_week(self, week):
@@ -57,14 +58,15 @@ class SupportingExercise(Exercise):
 class ScheduleRow:
     def __init__(
             self,
-            main_exercise: MainExercise,
+            main_exercises: tuple[MainExercise],
             supporting_exercises: tuple[SupportingExercise]):
-        self.main_exercise = main_exercise
+        self.main_exercises = main_exercises
         self.supporting_exercises = supporting_exercises
 
     def make_row(self):
         df = pd.concat(
-            [self.main_exercise.make_row(),
+            [*[m.make_row() for m in self.main_exercises],
+             #[self.main_exercise.make_row(),
              *[se.make_row() for se in self.supporting_exercises]])
         return df
 
@@ -77,7 +79,7 @@ class Schedule:
           [
               # 1st Day
               {
-                   'main': (name, training_max)},
+                   'main': [(name, training_max)],  # may contain 1+ tuples
                    'support': [
                        (name1, tr_mx1), (name2, tr_mx2), ..., (namen, tr_mxn)
                     ]
@@ -99,16 +101,22 @@ class Schedule:
     def make_schedule(self):
         dfs = []
         for i, day in enumerate(self.exercises):
-            main_exercise = MainExercise(
-                *day['main'], is_extended=self.is_extended)
+            main_exercises = [
+                MainExercise(name, tr_mx, self.is_extended)
+                for (name, tr_mx) in day['main']]
+            #main_exercise = MainExercise(
+            #    *day['main'], is_extended=self.is_extended)
             supporting_exercises = [
                 SupportingExercise(name, tr_mx)
                 for (name, tr_mx) in day['support']]
-            row = ScheduleRow(main_exercise, supporting_exercises).make_row()
+            row = ScheduleRow(main_exercises, supporting_exercises).make_row()
             row.index = pd.MultiIndex.from_tuples(
                 [(i + 1, idx) for idx in row.index])
             dfs.append(row)
         df = pd.concat(dfs)
+        df.reset_index(drop=False, inplace=True)
+        df.rename(
+            columns={'level_0': 'Day', 'level_1': 'Exercise'}, inplace=True)
         return df
 
 
@@ -125,19 +133,19 @@ if __name__ == '__main__':
     #print(ScheduleRow(main_ex, support).make_row())
 
     exercises = [
-        {'main': ('Squat', 188.),
+        {'main': [('Squat', 188.)],
          'support': [
              ('GM Standing', 76.5), ('DB Lunge', 69.5), ('Situp', 17.1)]},
-        {'main': ('Bench', 139.),
+        {'main': [('Bench', 139.)],
          'support': [
              ('DB Flies', 69.5), ('Wide Dips', 14.54), ('Knuckle Duster', 24.)
          ]},
-        {'main': ('Deadlift', 215.),
+        {'main': [('Deadlift', 215.)],
          'support': [
              ('DB Skull Crusher', 20.75),
              ('Kroc Rows', 39.5),
              ('Situps', 17.1)]},
-        {'main': ('Overhead Press', 106.5),
+        {'main': [('Overhead Press', 106.5)],
          'support': [('Pullup', 10.), ('Curl', 20.75), ('Knuckle Duster', 24.)]
         }]
     print(Schedule(exercises, is_extended=True).make_schedule())
