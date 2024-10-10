@@ -15,6 +15,7 @@ A weight training program that focuses on high-weight/low-reps with the goal of 
 ## Inputs:
 Initial exercises may be input in the `data/` directory with any of the following formats:
 - csv:
+
 day|type   |exercise   |training_max|increment_per_cycle
 ---|-------|-----------|------------|-------------------
 1  |main   |squat      |200         |10
