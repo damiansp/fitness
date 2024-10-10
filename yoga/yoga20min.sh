@@ -1,2 +1,2 @@
 WEEK=$1
-./main.py -w $1 -t 20
+./entrypoint.py -w $1 -t 20
