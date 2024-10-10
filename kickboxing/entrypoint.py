@@ -24,55 +24,59 @@ from numpy import random
 
 
 # Moves and weights (frequency in workout is proportional to weight)
-BOXING_MOVES = {'jab': 10,
-                'cross': 8,
-                'left hook': 3,
-                'right hook': 3,
-                'left uppercut': 3,
-                'right uppercut': 3,
-                'bob': 0.5,
-                'weave': 0.5,
-                'circle left': 0.5,
-                'circle right': 0.5,
-                'block left': 0.25,
-                'block right': 0.25}
-KICKBOXING_MOVES = {'roundhouse': 3,
-                    'side kick': 2,
-                    'front kick': 1,
-                    'elbow': 1,
-                    'knee': 1,
-                    'heel kick': 0.3,
-                    'inside crescent': 0.25,
-                    'outside crescent': 0.1}
-EXERCISES = {'pushups': 5,
-             'pike pushups': 3,
-             'dips': 4,
-             'situps': 5,
-             'crunches': 5,
-             'bicycle situps': 3,
-             'plank': 4,
-             'leg-lifts': 4,
-             'knuckle-dusters': 5,
-             'mountain climbers': 3,
-             'kettlebell swings': 1,
-             'supermans': 2,
-             'jumprope': 5,
-             'jumping jacks': 5,
-             'heismans': 4,
-             'speed-skaters': 3,
-             'burpees': 2,
-             'sprint-sprawl': 3,
-             'sprint-sprawl-pushup': 2,
-             'squats': 5,
-             'lunges': 4,
-             'squat jumps': 3,
-             'split jumps': 3}
+BOXING_MOVES = {
+    'jab': 10,
+    'cross': 8,
+    'left hook': 3,
+    'right hook': 3,
+    'left uppercut': 3,
+    'right uppercut': 3,
+    'bob': 0.5,
+    'weave': 0.5,
+    'circle left': 0.5,
+    'circle right': 0.5,
+    'block left': 0.25,
+    'block right': 0.25}
+KICKBOXING_MOVES = {
+    'roundhouse': 3,
+    'side kick': 2,
+    'front kick': 1,
+    'elbow': 1,
+    'knee': 1,
+    'heel kick': 0.3,
+    'inside crescent': 0.25,
+    'outside crescent': 0.1}
+EXERCISES = {
+    'pushups': 5,
+    'pike pushups': 3,
+    'dips': 4,
+    'situps': 5,
+    'crunches': 5,
+    'bicycle situps': 3,
+    'plank': 4,
+    'leg-lifts': 4,
+    'knuckle-dusters': 5,
+    'mountain climbers': 3,
+    'kettlebell swings': 1,
+    'supermans': 2,
+    'jumprope': 5,
+    'jumping jacks': 5,
+    'heismans': 4,
+    'speed-skaters': 3,
+    'burpees': 2,
+    'sprint-sprawl': 3,
+    'sprint-sprawl-pushup': 2,
+    'squats': 5,
+    'lunges': 4,
+    'squat jumps': 3,
+    'split jumps': 3}
 MAX_S_PER_EXERCISE = 30
 MAX_COMBO = 5
 MOVE_TIME = 1
 VOICE = 'Karen'
-defaults = {'actual': {'c': 'kbc', 't': 30, 'w': 3., 'r': 1.},
-            'test':   {'c': 'kbc', 't': 5, 'w': 2, 'r': 0.1}}
+defaults = {
+    'actual': {'c': 'kbc', 't': 30, 'w': 3., 'r': 1.},
+    'test':   {'c': 'kbc', 't': 5, 'w': 2, 'r': 0.1}}
 
 # Dev options
 TEST = False
@@ -88,21 +92,25 @@ def main(args):
     
 def parse_args(args):
     parser = argparse.ArgumentParser()
-    parser.add_argument('-c', '--category',
-                        help='workout type (b, kb, bc, kbc)',
-                        default=DEFAULTS['c'])
-    parser.add_argument('-t', '--time',
-                        help='time (min)',
-                        type=float,
-                        default=DEFAULTS['t'])
-    parser.add_argument('-w', '--work',
-                        help='work time per round (min)',
-                        type=float,
-                        default=DEFAULTS['w'])
-    parser.add_argument('-r', '--rest',
-                        help='rest time per round (min)',
-                        type=float,
-                        default=DEFAULTS['r'])
+    parser.add_argument(
+        '-c', '--category',
+        help='workout type (b, kb, bc, kbc)',
+        default=DEFAULTS['c'])
+    parser.add_argument(
+        '-t', '--time',
+        help='time (min)',
+        type=float,
+        default=DEFAULTS['t'])
+    parser.add_argument(
+        '-w', '--work',
+        help='work time per round (min)',
+        type=float,
+        default=DEFAULTS['w'])
+    parser.add_argument(
+        '-r', '--rest',
+        help='rest time per round (min)',
+        type=float,
+        default=DEFAULTS['r'])
     args = parser.parse_args()
     return vars(args)
 
@@ -112,8 +120,7 @@ def say(text):
 
     
 class Workout:
-    '''
-    Categories:
+    '''Categories:
     - b:   Boxing only        (box, break, box, break...)
     - kb:  Kickboxing only    (kb, break, kb, break...)
     - bc:  Boxing circuit     (b, break, other, break...)
@@ -137,11 +144,12 @@ class Workout:
             'bc': 'boxing circuit',
             'kbc': 'kickboxing circuit'
         }[self.cat]
-        return (f'A {self.total_t} min {workout_type} workout:\n'
-                f'{self.n_rounds} rounds of\n'
-                f'  Work: {self.work_t:.2f} min\n'
-                f'  Rest: {self.rest_t:.2f} min')
-
+        return (
+            f'A {self.total_t} min {workout_type} workout:\n'
+            f'{self.n_rounds} rounds of\n'
+            f'  Work: {self.work_t:.2f} min\n'
+            f'  Rest: {self.rest_t:.2f} min')
+    
     def _generate_rounds(self):
         seq = {
             'b': ['box'],
