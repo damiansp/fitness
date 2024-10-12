@@ -1,17 +1,17 @@
-﻿day,type,exercise,training_max,increment_per_cycle
-1,main,squat,188,10
-1,support,gm standing,76.5,2.5
-1,support,db lunge,69.5,2.5
-1,support,situp,17.1,2.5
-2,main,bench,139,5
-2,support,db flies,69.5,1.25
-2,support,wide dips,14.54,2.5
-2,support,knuckle dusters,24,2.5
-3,main,deadlift,215,10
-3,support,db skull crusher,20.75,1.25
-3,support,kroc rows,79,5
-3,support,situp,17.1,2.5
+day,type,exercise,training_max,increment_per_cycle
+1,main,squat,198,10
+1,main,gm standing,79,2.5
+1,main,db lunge,72,2.5
+1,main,situp,19.6,2.5
+2,main,bench,144,5
+2,main,db flies,68.25,1.25
+2,main,wide dips,17.04,2.5
+2,main,knuckle dusters,26.5,2.5
+3,main,deadlift,225,10
+3,main,db skull crusher,22,1.25
+3,main,kroc rows,84,5
+3,main,situp,19.6,2.5
 4,main,overhead press,106.5,2.5
-4,support,pullup,10,2.5
-4,support,curl,41.5,2.5
-4,support,knuckle dusters,24,2.5
+4,main,pullup,12.5,2.5
+4,main,curl,44,2.5
+4,main,knuckle dusters,26.5,2.5
