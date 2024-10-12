@@ -5,3 +5,8 @@
 
 # Python
 *.pyc
+
+
+# Files
+input.csv
+schedule.csv
