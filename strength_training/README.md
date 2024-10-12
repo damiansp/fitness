@@ -11,6 +11,7 @@ A weight training program that focuses on high-weight/low-reps with the goal of 
 ```./entrypoint.py -i my_input_file.csv -o my_outputfile.csv```
 
 Running the above will create your output schedule, and _will also_ update the input file to be ready for the next cycle. So...
+
 3. On subsequent runs, when you are ready to begin the next cycle, you do not need to update your input file, as that will have been done automatically. You can again just run:
 ```./entrypoint.py [-i my_input_file.csv] [-o my_outputfile.csv]```
 where the bracketed parts are optional.
