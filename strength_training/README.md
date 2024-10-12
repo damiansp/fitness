@@ -20,7 +20,7 @@ where the bracketed parts are optional.
 
 
 ## Inputs:
-Initial exercises may be input in the `data/` directory in .csv format (see full example in `data/input.csv`:
+Initial exercises may be input in the `data/` directory in .csv format (see full example in `data/example_input.csv`:
 
 day|type   |exercise   |training_max|increment_per_cycle
 ---|-------|-----------|------------|-------------------
