@@ -1,73 +1,67 @@
-import json
-import pickle
+#! /usr/bin/env python3
 
-import pandas as pd
+#----------------------------------------------------------------
+#
+# Usage
+# entrypoint.py [-i INFILE][-o OUTFILE]
+#
+# COMMAND (char):
+# INFILE (str): name of input file (defaults to "input.csv")
+# OUTFILE (str): name of output file (defaults to "schedule.csv")
+#
+#----------------------------------------------------------------
+import argparse
+import sys
 
+from app.input_handling import InputReader
 from app.scheduler import Schedule
+from app.updating import Updater
 
 
 DATA = './data'
 
 
-def main():
-    exercises = InputReader(f'{DATA}/input.csv').get_exercises()
+def main(args):
+    infile, outfile = parse_args(args)
+    print(
+        f'Running with args:\n'
+        f'  infile:  {infile}\n'
+        f'  outfile: {outfile}')
+    create_cycle_from_input_file(infile, outfile)
+
+
+def parse_args(args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-i',
+        '--infile',
+        help='Input file name (e.g., "input.csv")',
+        default='input.csv')
+    parser.add_argument(
+        '-o',
+        '--outfile',
+        help='Output file name (e.g., "schedule.csv")',
+        default='schedule.csv')
+    args = parser.parse_args()
+    return [check_extensions(f) for f in (args.infile, args.outfile)]
+
+
+def check_extensions(filename):
+    if not filename.endswith('.csv'):
+        filename += '.csv'
+    return filename
+
+
+def create_cycle_from_input_file(infile, outfile):
+    print(f'Creating cycle from {infile}...')
+    exercises = InputReader().get_exercises(f'{DATA}/{infile}')
     schedule = Schedule(exercises, is_extended=True).make_schedule()
-    sched_path = f'{DATA}/test_schedule.csv'
+    sched_path = f'{DATA}/{outfile}'
     schedule.to_csv(sched_path, index=False)
     print('Saved schedule to', sched_path)
+    Updater().update(f'{DATA}/{infile}')
+    print(f'Input file {infile} updated for next cycle')
     
-
-class InputReader:
-    def __init__(self, path):
-        self.path = path
-        
-    def get_exercises(self):
-        ext = self.path.split('.')[-1]
-        exercises = {
-            'csv': self._get_exercises_from_csv,
-            'json': self._get_exercises_from_json,
-            'pkl': self._get_exercises_from_pickle
-        }[ext]()
-        return exercises
-    
-    def _get_exercises_from_csv(self):
-        df = pd.read_csv(self.path)
-        exercises = []
-        for day in df['day'].unique():
-            day_exercises = self._get_exercises_for_day(
-                df.loc[df.day == day, :])
-            exercises.append(day_exercises)
-        return exercises
-
-    @staticmethod
-    def _get_exercises_for_day(day_df):
-        main = []
-        support = []
-        for _, row in day_df.iterrows():
-            tup = (row.exercise, row.training_max, row.increment_per_cycle)
-            if row['type'] == 'main':
-                main.append(tup)
-            elif row['type'] == 'support':
-                support.append(tup)
-            else:
-                raise ValueError(f'Bad "type": {row["type"]}')
-        return {'main': main, 'support': support}
-            
-
-    def _get_exercises_from_json(self):
-        with open(self.path, 'r') as f:
-            exercises = json.load(f)
-        # Convert innermost lists to tuples
-        for day in exercises:
-            for k, v in day.items():
-                exercises[day][k] = [tuple(x) for x in v]
-        return exercises
-
-    def _get_exercises_from_pickle(self):
-        with open(self.path, 'rb') as f:
-            exercises = pickle.load(f)
-        return exercises
-
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv)
