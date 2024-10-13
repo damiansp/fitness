@@ -5,7 +5,6 @@
 # Usage
 # entrypoint.py [-i INFILE][-o OUTFILE]
 #
-# COMMAND (char):
 # INFILE (str): name of input file (defaults to "input.csv")
 # OUTFILE (str): name of output file (defaults to "schedule.csv")
 #
