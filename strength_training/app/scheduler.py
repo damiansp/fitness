@@ -77,7 +77,6 @@ class ScheduleRow:
     def make_row(self):
         df = pd.concat(
             [*[m.make_row() for m in self.main_exercises],
-             #[self.main_exercise.make_row(),
              *[se.make_row() for se in self.supporting_exercises]])
         return df
 
@@ -127,41 +126,3 @@ class Scheduler:
         df.rename(
             columns={'level_0': 'Day', 'level_1': 'Exercise'}, inplace=True)
         return df
-
-
-
-if __name__ == '__main__':
-    #print(MainExercise('Squat', 188).make_row())
-    #print(SupportingExercise('GM Standing', 76.5).make_row())
-
-    #main_ex = MainExercise('Squat', 188)
-    #support = [
-    #    SupportingExercise('GM Standing', 76.5),
-    #    SupportingExercise('DB Lunge', 69.5),
-    #    SupportingExercise('Situps', 17.1)]
-    #print(ScheduleRow(main_ex, support).make_row())
-
-    exercises = [
-        {'main': [('Squat', 188., 10)],
-         'support': [
-             ('GM Standing', 76.5, 1.24),
-             ('DB Lunge', 69.5, 2.5),
-             ('Situp', 17.1, 1.25)]},
-        {'main': [('Bench', 139., 5)],
-         'support': [
-             ('DB Flies', 69.5, 2.5),
-             ('Wide Dips', 14.54, 1.25),
-             ('Knuckle Duster', 24, 1.25)
-         ]},
-        {'main': [('Deadlift', 215., 10)],
-         'support': [
-             ('DB Skull Crusher', 20.75, 1.25),
-             ('Kroc Rows', 39.5, 2.5),
-             ('Situps', 17.1, 1.25)]},
-        {'main': [('Overhead Press', 106.5, 5)],
-         'support': [
-             ('Pullup', 10., 1.25),
-             ('Curl', 20.75, 1.25),
-             ('Knuckle Duster', 24., 1.25)]}]
-    print(Scheduler(exercises, is_extended=True).make_schedule())
-    
