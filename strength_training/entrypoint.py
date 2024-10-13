@@ -14,7 +14,7 @@ import argparse
 import sys
 
 from app.input_handling import InputReader
-from app.scheduler import Schedule
+from app.scheduler import Scheduler
 from app.updating import Updater
 
 
@@ -55,7 +55,7 @@ def check_extensions(filename):
 def create_cycle_from_input_file(infile, outfile):
     print(f'Creating cycle from {infile}...')
     exercises = InputReader().get_exercises(f'{DATA}/{infile}')
-    schedule = Schedule(exercises, is_extended=True).make_schedule()
+    schedule = Scheduler(exercises, is_extended=True).make_schedule()
     sched_path = f'{DATA}/{outfile}'
     schedule.to_csv(sched_path, index=False)
     print('Saved schedule to', sched_path)

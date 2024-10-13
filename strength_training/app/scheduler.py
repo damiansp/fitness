@@ -82,7 +82,7 @@ class ScheduleRow:
         return df
 
 
-class Schedule:
+class Scheduler:
     def __init__(self, exercises: list[dict], is_extended: bool = False):
         '''Make a work out schedule for one (4-week) cycle
         Args:
@@ -163,5 +163,5 @@ if __name__ == '__main__':
              ('Pullup', 10., 1.25),
              ('Curl', 20.75, 1.25),
              ('Knuckle Duster', 24., 1.25)]}]
-    print(Schedule(exercises, is_extended=True).make_schedule())
+    print(Scheduler(exercises, is_extended=True).make_schedule())
     
