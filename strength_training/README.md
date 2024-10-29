@@ -34,12 +34,30 @@ day|type   |exercise   |training_max|increment_per_cycle
 ...|...    |...        |...         |...
 
 
+To get the program to automatically tell you what plates to use for your scehduled weights, create files:
+- `./data/weights/bar_weights.csv'   # for barbell
+- `./data/weights/dumb_weights.csv'  # for dumbbells
+
+File should be formatted like:
+
+bar|2.25|5.5|11|22|44|...
+---|----|---|--|--|--|---
+ 40|   4|  4| 2| 2| 2|...
+
+Where the column headers are "bar" and whatever weights you have avaliable, and the first row is the weight of the bar followed by the by the number of each type of plate you have _per bar_.
+See example in this repo.
+
+
 ## Outputs:
 A 4-week schedule of exercises, and updates the input file to be incremented for the following cycle
 
 
+
+
+
 ## Dev
 ### TODOs
-- [ ] Create weight list form schedule
+- [X] Create weight list form schedule
+- [ ] Generate weight combos for each day's routine
 
 
