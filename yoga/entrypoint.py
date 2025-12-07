@@ -20,13 +20,17 @@ from PIL import Image
 
 
 WEEKLY = 'schedules/weekly'
+FOCUSED = 'schedules/focused'
 ASANAS = 'asanas'
 IMG = 'images'
 
 
 def main(args):
-    week, total_time, do_corpse, max_per = parse_args(args)
-    asana_list = load_weekly_schedule(week)
+    week_or_focus, total_time, do_corpse, max_per = parse_args(args)
+    if isinstance(week_or_focus, str):
+        asana_list = load_focused_schedule(week_or_focus)
+    else:
+        asana_list = load_weekly_schedule(week)
     candidate_asanas = load_all_asanas(asana_list)
     candidate_asanas = [Asana(asana, max_per) for asana in candidate_asanas]
     asanas = generate_lesson(candidate_asanas, total_time, do_corpse)
@@ -37,7 +41,10 @@ def main(args):
 def parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '-w', '--week', help='maximum week to select', type=int)
+        '-w',
+        '--week',
+        help='maximum week to select, or course if foucused',
+        type=str)
     parser.add_argument(
         '-t',
         '--time',
@@ -65,16 +72,25 @@ def parse_args(args):
     args.max_per *= 60.
     assert 0 < args.lmb <= 1, 'lambda must be on (0, 1]'
     if not args.exact:
-        probs = np.array([args.lmb**i for i in range(args.week)][::-1])
-        probs = probs / probs.sum()
-        week = np.random.choice(range(1, args.week + 1), 1, p=probs)[0]
-        week = week
+        try:
+            probs = np.array([args.lmb**i for i in range(args.week)][::-1])
+            probs = probs / probs.sum()
+            week = int(args.week)
+            week = np.random.choice(range(1, args.week + 1), 1, p=probs)[0]
+        except TypeError:
+            week = str(args.week)
     do_corpse = not args.nocorpse
     args = [week, args.time, do_corpse, args.max_per]
     print('Running with args:')
     for name, val in zip(['week', 'total_time', 'do_corpse', 'max_per'], args):
         print(f'  {name:10s}: {val}')
     return args
+
+
+def load_focused_schedule(focus):
+    with open(f'{FOCUSED}/{focus}.json', 'r') as f:
+        asana_list = json.load(f)
+    return asana_list
 
 
 def load_weekly_schedule(week):

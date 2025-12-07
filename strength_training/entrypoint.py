@@ -70,6 +70,7 @@ def update_weights():
     for bell in ['bar', 'dumb']:
         WeightChart().make_chart(bell)
 
+
 def create_cycle_from_input_file(infile, outfile):
     print(f'Creating cycle from {infile}...')
     exercises = InputReader().get_exercises(f'{DATA}/{infile}')
@@ -77,8 +78,8 @@ def create_cycle_from_input_file(infile, outfile):
     sched_path = f'{DATA}/{outfile}'
     schedule.to_csv(sched_path, index=False)
     print('Saved schedule to', sched_path)
-    Updater().update(f'{DATA}/{infile}')
-    print(f'Input file {infile} updated for next cycle')
+    #Updater().update(f'{DATA}/{infile}')
+    #print(f'Input file {infile} updated for next cycle')
     
 
 if __name__ == '__main__':
